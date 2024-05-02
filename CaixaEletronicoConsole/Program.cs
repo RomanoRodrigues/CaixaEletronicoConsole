@@ -22,7 +22,6 @@ void menu()
             break;
         case 3:
             return;
-            break;
     }
 }
 
@@ -32,18 +31,18 @@ void menuAdm()
     Console.WriteLine("1. Cadastro de Conta Corrente");
     Console.WriteLine("2. Mostrar os Saldos");
     Console.WriteLine("3. Excluir Conta");
+    Console.WriteLine("4. Voltar");
     int op = int.Parse(Console.ReadLine());
     switch (op)
     {
         case 1:
-            menuAdm();
+            contas.Add(CaixaEletronicoConsole.Readline);
             break;
         case 2:
             menuCaixa();
             break;
         case 3:
             return;
-            break;
     }
 }
 
@@ -52,26 +51,34 @@ void menuCaixa()
     Console.Write("Qual é a sua conta: ");
     bool find;
     string testAcc = Console.ReadLine();
-    foreach
-    if (CCorrente.(testAcc).status == true)
+    for (int i = 0; i != contas.Count; i++)
     {
-        Console.WriteLine("-MENU-");
-        Console.WriteLine("1. Saque");
-        Console.WriteLine("2. Depósito");
-        Console.WriteLine("3. Transferência");
-        Console.WriteLine("4. Voltar");
-        int op = int.Parse(Console.ReadLine());
-        switch (op)
+        if (CCorrente.contas[i].status)
         {
-            case 1:
-                menuAdm();
-                break;
-            case 2:
+            Console.WriteLine("-MENU-");
+            Console.WriteLine("1. Saque");
+            Console.WriteLine("2. Depósito");
+            Console.WriteLine("3. Transferência");
+            Console.WriteLine("4. Voltar");
+            int op = int.Parse(Console.ReadLine());
+            switch (op)
+            {
+                case 1:
 
-                break;
-            case 3:
-                menu();
-                break;
+                    break;
+                case 2:
+
+                    break;
+                case 3:
+                    menu();
+                    break;
+                case 4:
+                    return;
+            }
+        }
+        else
+        {
+            Console.WriteLine("Essa conta foi desativada");
         }
     }
 }
