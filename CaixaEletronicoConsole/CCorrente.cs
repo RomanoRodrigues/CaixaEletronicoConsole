@@ -1,66 +1,46 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Sockets;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Transactions;
-
-namespace CaixaEletronicoConsole
+﻿public class CCorrente
 {
-    public class CCorrente
+    public string numero;
+    public double saldo;
+    public double limite;
+    public bool status;
+    public bool especial;
+
+    public CCorrente(string numero, double limite)
     {
-        public string numero;
-        public double saldo;
-        public double limite;
-        public bool status;
-        public bool especial;
-        public List<Transacao> transacoes;
+        this.numero = numero;
+        this.limite = limite;
+        this.saldo = 0; // Inicializa o saldo como 0
+        this.status = true; // Define o status como ativo por padrão
+    }
 
-        public CCorrente()
+    public bool Sacar(double valor)
+    {
+        if (saldo - valor > -limite)
         {
-            this.status = true;
-            this.saldo = 0;
-            transacoes = new List<Transacao>();
+            saldo -= valor;
+            return true;
         }
-        public CCorrente(string numero, double limite) : this()
-        {
-            this.numero = numero;
-            this.limite = limite;
-        }
+        return false;
+    }
 
-        bool Sacar(double valor)
+    public bool Depositar(double valor)
+    {
+        if (valor > 0)
         {
-            if (saldo - valor > -limite)
-            {
-                saldo -= valor;
-                transacoes.Add(new Transacao(valor, 's'));
-                return true;
-            }
-            return false;
+            saldo += valor;
+            return true;
         }
+        return false;
+    }
 
-        bool Depositar(double valor)
+    public bool Transferir(CCorrente destino, double valor)
+    {
+        if (destino.status && Sacar(valor))
         {
-            if (valor > 0)
-            {
-                saldo += valor;
-                transacoes.Add(new Transacao(valor, 'd'));
-                return true;
-            }
-            return false;
+            destino.Depositar(valor);
+            return true;
         }
-
-        bool Transferir(CCorrente destino, double valor)
-        {
-            if (destino.status && Sacar(valor) && destino.Depositar(valor))
-            {
-                transacoes[transacoes.Count - 1].duplicata = destino.transacoes[destino.transacoes.Count - 1];
-                destino.transacoes[destino.transacoes.Count - 1].duplicata = transacoes[transacoes.Count - 1];
-                return true;
-            }
-            return false;
-        }
+        return false;
     }
 }
